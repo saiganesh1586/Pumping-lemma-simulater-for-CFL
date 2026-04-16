@@ -1,4 +1,4 @@
-# 🧠 Pumping Lemma Simulator (CFL)
+# Pumping Lemma Simulator (CFL)
 
 This project is an interactive web-based simulator built to understand the **Pumping Lemma for Context-Free Languages (CFL)** in a visual and intuitive way.
 
@@ -6,7 +6,7 @@ Instead of just reading theory, this tool allows users to actually see how a str
 
 ---
 
-## 🚀 What this project does
+## What this project does
 
 * Lets you select different formal languages
 * Allows you to input any valid string
@@ -22,7 +22,7 @@ This helps in understanding why certain languages **fail under pumping**, which 
 
 ---
 
-## 🎯 Why this project
+## Why this project
 
 The Pumping Lemma is often confusing when studied theoretically.
 This simulator was built to make the concept:
@@ -35,7 +35,7 @@ Users can even try different decompositions and observe how the result changes.
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 * HTML
 * CSS
@@ -45,7 +45,7 @@ No external frameworks were used — everything is built using basic web technol
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 * `index.html` → Main UI
 * `style.css` → Styling and layout
@@ -53,7 +53,7 @@ No external frameworks were used — everything is built using basic web technol
 
 ---
 
-## ▶️ How to run
+##  How to run
 
 1. Download or clone the repository
 2. Open `index.html` in any browser
@@ -62,19 +62,19 @@ That’s it — no installation required.
 
 ---
 
-## 🌐 Live Demo
+##  Live Demo
 
 (Replace with your deployed link)
 
 ---
 
-## 🎥 Demo Video
+##  Demo Video
 
 (Replace with your video link)
 
 ---
 
-## 📌 Key Learning
+##  Key Learning
 
 This project demonstrates that:
 
@@ -84,7 +84,7 @@ This project demonstrates that:
 
 ---
 
-## ✨ Future Improvements
+## Future Improvements
 
 * Better animations for pumping steps
 * Support for more complex languages
@@ -92,13 +92,13 @@ This project demonstrates that:
 
 ---
 
-## 👨‍💻 Author
+##  Author
 
 Developed as part of Theory of Computation coursework.
 
 ---
 
-## ⚠️ Note
+##  Note
 
 This is a conceptual simulator designed for learning purposes.
 It uses rule-based validation instead of full CFG parsing.
