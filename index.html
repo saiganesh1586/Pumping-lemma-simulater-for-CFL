@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pumping Lemma Simulator — CFL</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-chip">CFL</div>
+      <div>
+        <h1>Pumping Lemma Simulator</h1>
+        <p class="subtitle">Visual step-by-step proof tool for Context-Free Languages</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- INPUT PANEL -->
+    <section class="card input-card" id="inputSection">
+      <div class="card-label">Configure</div>
+      <h2>Set Up the Simulation</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="langSelect">Language</label>
+          <select id="langSelect">
+            <option value="anbn">L = { aⁿbⁿ | n ≥ 1 }</option>
+            <option value="balancedParen">L = Balanced Parentheses</option>
+            <option value="palindrome">L = Palindromes over {a, b}</option>
+            <option value="anbncn">L = { aⁿbⁿcⁿ | n ≥ 1 }</option>
+            <option value="abcd">L = { aⁿbⁿcⁿdⁿ | n ≥ 1 }</option>
+            <option value="ww">L = { ww | w ∈ {a,b}* }</option>
+            <option value="anbmcn">L = { aⁿbᵐcⁿ | n ≥ 1, m ≥ 1 }</option>
+            <option value="aprime">L = { aᵖ | p is prime }</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="stringInput">Input String <span class="hint" id="alphabetHint">(alphabet: {a, b})</span></label>
+          <input type="text" id="stringInput" placeholder="Type a string…" autocomplete="off" spellcheck="false" />
+        </div>
+
+        <div class="form-group">
+          <label for="pumpInput">Pumping Length (p)</label>
+          <input type="number" id="pumpInput" min="1" max="20" value="3" />
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="autoBtn" class="btn-secondary">Auto-fill Example</button>
+        <button id="startBtn" class="btn-primary">Start Simulation ▶</button>
+      </div>
+
+      <div id="inputError" class="error-msg hidden"></div>
+    </section>
+
+    <!-- STEP PROGRESS BAR -->
+    <div id="stepProgress" class="step-progress hidden">
+      <div class="step-prog-inner">
+        <div class="prog-step" id="prog1">
+          <div class="prog-circle">1</div>
+          <div class="prog-label">Original</div>
+        </div>
+        <div class="prog-line" id="line12"></div>
+        <div class="prog-step" id="prog2">
+          <div class="prog-circle">2</div>
+          <div class="prog-label">Decompose</div>
+        </div>
+        <div class="prog-line" id="line23"></div>
+        <div class="prog-step" id="prog3">
+          <div class="prog-circle">3</div>
+          <div class="prog-label">Pumping</div>
+        </div>
+        <div class="prog-line" id="line34"></div>
+        <div class="prog-step" id="prog4">
+          <div class="prog-circle">4</div>
+          <div class="prog-label">Verdict</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMULATION AREA -->
+    <div id="simArea" class="hidden">
+
+      <!-- CURRENT STEP BANNER -->
+      <div id="stepBanner" class="step-banner">
+        <div class="banner-icon" id="bannerIcon">📝</div>
+        <div class="banner-content">
+          <div class="banner-title" id="bannerTitle">Step 1: Original String</div>
+          <div class="banner-desc" id="bannerDesc">The string we are testing against the pumping lemma.</div>
+        </div>
+      </div>
+
+      <!-- STEP 1: Original String -->
+      <section class="card step-card hidden" id="step1Card">
+        <div class="step-badge">Step 1</div>
+        <h2>Original String</h2>
+        <p class="step-desc">The string <em>s</em> we are testing against the pumping lemma. Each character appears in its own indexed block.</p>
+        <div id="origStringDisplay" class="string-display"></div>
+        <div class="info-row">
+          <span class="info-chip" id="strLenInfo"></span>
+          <span class="info-chip" id="pInfo"></span>
+          <span class="info-chip" id="langInfo"></span>
+        </div>
+        <!-- Mode toggle inside Step 1 -->
+        <div class="decomp-mode-row">
+          <span class="decomp-mode-label">Decomposition Mode:</span>
+          <div class="decomp-mode-toggle" id="decompModeToggle">
+            <button class="mode-btn active" id="modeAutoBtn" data-mode="auto">⚙ Auto</button>
+            <button class="mode-btn" id="modeManualBtn" data-mode="manual">✏ Manual</button>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <div></div>
+          <button class="btn-step-next" id="step1Next">Decompose String →</button>
+        </div>
+      </section>
+
+      <!-- STEP 1.5: Manual Decomposition Editor (shown only in Manual mode) -->
+      <section class="card step-card hidden" id="step15Card">
+        <div class="step-badge" style="background:rgba(249,115,22,.15);color:#f97316;border-color:rgba(249,115,22,.3);">Manual Split</div>
+        <h2>Define Your Decomposition</h2>
+        <p class="step-desc">Click between characters to place the 4 split boundaries and divide the string into <strong>u · v · x · y · z</strong>. You need exactly 4 dividers.</p>
+
+        <!-- Interactive string with click-to-split UI -->
+        <div id="splitEditorDisplay" class="split-editor-display"></div>
+
+        <!-- Split controls row -->
+        <div class="split-controls">
+          <div class="split-control-group">
+            <span class="split-ctrl-label">Dividers placed:</span>
+            <span id="splitCount" class="split-count-badge">0 / 4</span>
+          </div>
+          <button class="btn-split-clear" id="splitClearBtn">✕ Clear All</button>
+        </div>
+
+        <!-- Live constraint check chips -->
+        <div class="split-constraints" id="splitConstraints">
+          <div class="constraint-chip" id="cc1">
+            <span class="cc-icon">○</span>
+            <span class="cc-text">u + v + x + y + z = s</span>
+          </div>
+          <div class="constraint-chip" id="cc2">
+            <span class="cc-icon">○</span>
+            <span id="ccVxyText" class="cc-text">|vxy| ≤ p</span>
+          </div>
+          <div class="constraint-chip" id="cc3">
+            <span class="cc-icon">○</span>
+            <span class="cc-text">|vy| &gt; 0</span>
+          </div>
+        </div>
+
+        <!-- Live colored preview -->
+        <div class="split-preview-label">Live Preview</div>
+        <div id="splitPreviewDisplay" class="decomp-display split-preview-box"></div>
+
+        <!-- Error message -->
+        <div id="splitError" class="error-msg hidden"></div>
+
+        <div class="step-nav">
+          <button class="btn-step-prev" id="step15Prev">← Back</button>
+          <button class="btn-step-next" id="step15Next" disabled>Apply Split →</button>
+        </div>
+      </section>
+
+      <!-- STEP 2: Decomposition -->
+      <section class="card step-card hidden" id="step2Card">
+        <div class="step-badge">Step 2</div>
+        <div class="step2-header-row">
+          <h2>Decomposing s = u·v·x·y·z</h2>
+          <span id="decompModeChip" class="decomp-mode-chip">Auto</span>
+        </div>
+        <p class="step-desc">By the pumping lemma, we split <em>s</em> into five parts such that <strong>|vxy| ≤ p</strong> and <strong>|vy| &gt; 0</strong>.</p>
+
+        <div id="decompDisplay" class="decomp-display"></div>
+
+        <div class="legend">
+          <span class="leg-item"><span class="dot u"></span>u</span>
+          <span class="leg-item"><span class="dot v"></span>v (pumped)</span>
+          <span class="leg-item"><span class="dot x"></span>x</span>
+          <span class="leg-item"><span class="dot y"></span>y (pumped)</span>
+          <span class="leg-item"><span class="dot z"></span>z</span>
+        </div>
+
+        <div id="decompInfo" class="decomp-info"></div>
+
+        <div class="step-nav">
+          <button class="btn-step-prev" id="step2Prev">← Original String</button>
+          <button class="btn-step-next" id="step2Next">Start Pumping →</button>
+        </div>
+      </section>
+
+      <!-- STEP 3: Pumping -->
+      <section class="card step-card hidden" id="step3Card">
+        <div class="step-badge">Step 3</div>
+        <h2>Pumping v and y</h2>
+        <p class="step-desc">We generate <strong>uv<sup>i</sup>xy<sup>i</sup>z</strong> for i = 0, 1, 2 and check if the resulting string stays in the language. Use the stepper to navigate.</p>
+
+        <div class="pump-stepper-bar">
+          <button class="pump-i-btn" id="pumpPrevBtn" disabled>◀</button>
+          <div class="pump-i-indicators" id="pumpIIndicators">
+            <span class="pump-i-dot active" data-i="0">i = 0</span>
+            <span class="pump-i-dot" data-i="1">i = 1</span>
+            <span class="pump-i-dot" data-i="2">i = 2</span>
+          </div>
+          <button class="pump-i-btn" id="pumpNextBtn">▶</button>
+        </div>
+
+        <div id="pumpResults" class="pump-results"></div>
+
+        <div class="step-nav">
+          <button class="btn-step-prev" id="step3Prev">← Decomposition</button>
+          <button class="btn-step-next hidden" id="step3Next">See Verdict →</button>
+        </div>
+      </section>
+
+      <!-- STEP 4: Verdict -->
+      <section class="card step-card hidden" id="step4Card">
+        <div class="step-badge">Step 4</div>
+        <h2>Final Verdict</h2>
+        <div id="verdict" class="verdict"></div>
+        <div id="explanation" class="explanation"></div>
+        <div class="step-nav">
+          <button class="btn-step-prev" id="step4Prev">← Back to Pumping</button>
+          <button id="resetBtn" class="btn-secondary">↩ Reset Simulation</button>
+        </div>
+      </section>
+
+    </div><!-- /simArea -->
+
+  </main>
+
+  <footer>
+    <p>Pumping Lemma Simulator · Built for teaching CFL theory · Every string tells a story</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
